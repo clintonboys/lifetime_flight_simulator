@@ -16,15 +16,28 @@
 '''
 
 import pandas as pd
+import numpy as np
 
 class Player(object):
 
-	def __init__(self, name, age, miles, flights, money):
+	def __init__(self, name, country, age, miles, flights, money):
 		self._name = name
+		self._country = country
 		self._age = age
 		self._miles = miles
 		self._flights = flights
 		self._money = money
+
+	def print_player_stats(self):
+
+		print '----------------------'
+	 	print 'NAME:    ' + self._name
+	 	print 'COUNTRY: ' + self._country
+	 	print 'AGE:     ' + str(self._age) + ' years'
+	 	print 'FLIGHTS: ' + str(self._flights) 
+	 	print 'MILES:   ' + str(self._miles)
+	 	print '----------------------'
+
 
 class Flight(object):
 
@@ -39,6 +52,18 @@ class Flight(object):
 def load_airports():
 
 	return pd.read_csv('airports.csv')
+
+def compute_distance(lat1,long1,lat2,long2):
+	r = 6371000
+	phi1 = np.radians(lat1)
+	phi2 = np.radians(lat2)
+	dphi = np.radians(lat2 - lat1)
+	dlam = np.radians(long2 - long1)
+
+	a = np.sin(dphi/2) * np.sin(dphi/2) + np.cos(phi1) * np.cos(phi2) * np.sin(dlam/2) * np.sin(dlam/2)
+	c = 2*np.arctan2(np.sqrt(a), np.sqrt(1-a))
+
+	return r*c/1000
 
 def main():
 	print '---------------------------------------------------------------------'
@@ -58,8 +83,9 @@ def main():
 
  	print 'Welcome to Lifetime Flight Simulator.'
  	name = raw_input('What is your name?.. ')
+ 	country = raw_input('And where are you from?.. ')
 
- 	current_player = Player(name, 0, 0, 0, 0)
+ 	current_player = Player(name, country, 0, 0, 0, 0)
 
  	print 'Welcome to the world!'
  	print ''
@@ -67,6 +93,27 @@ def main():
  	print 'long-haul flights. '
  	print '....Loading airport data....'
  	airports = load_airports()
+ 	#print airports.head()
+ 	print 'Let \'s get started!'
+ 	current_player.print_player_stats()
+ 	airports.columns = ['row', 'name', 'city', 'country', 'iata', 'icao', 'lat', 'long', 'alt', 'timezone', 'dst', 'time_area']
+ 	print 'You have just been born in ' + country +'. Time for your first flight!'
+ 	print 'Select the airport your parents have chosen to depart from...'
+ 	print airports[airports.country == country][['name', 'city', 'country', 'iata']]
+ 	row_no_dep = raw_input('Departing airport...')
+ 	row_no_arr = raw_input('Arriving airport...')
+ 	distance = compute_distance(airports.lat[int(row_no_dep)], airports.long[int(row_no_dep)], airports.lat[int(row_no_arr)], airports.long[int(row_no_arr)])
+ 	print 'You have arrived!'
+ 	age_update =  raw_input('How long until your next flight? (months)..')
+
+	current_player._age += float(age_update)/12.0
+	current_player._miles += distance
+	current_player._flights += 1
+	current_player._money -= distance*(12000/2000)
+
+	current_player.print_player_stats()
+
 
 if __name__ == '__main__':
+
 	main()
