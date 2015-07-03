@@ -25,12 +25,18 @@ def main():
 		if death_chance < int((act.prob_1[int(current_player._age)]*100000 + act.prob_2[int(current_player._age)]*100000)/2):
 			print 'Sorry, you died of natural causes at the ripe old age of ' + str(current_player._age) + '.'
 			current_player._is_dead = True
+			print 'You can rest in peace for eternity having accrued the '
+ 			print 'following impressive collection of frequent flyer miles:'
+ 			for key in current_player._frequent:
+ 				print key, current_player._frequent[key]
 			break
 
 		dep = arr
 
 		print '-----------------------------------------------------------------'
 		print 'Welcome to ' + dep + ' airport!'
+ 		print 'We have flights departing to the following locations:'
+ 		print '-----------------------------------------------------------------'
 
 		nice_print(network[network.dep_airport == dep].arr_airport.unique().tolist())
 
@@ -61,10 +67,14 @@ def main():
  			print 'You can rest in peace for eternity having accrued the '
  			print 'following impressive collection of frequent flyer miles:'
  			for key in current_player._frequent:
- 				print key, frequent[key]
+ 				print key, current_player._frequent[key]
  			break
  		else:
- 			age_update = raw_input('How long until your next flight? (months)..')
+ 			print 'You have arrived!'
+ 			print 'Welcome to ' + network[network.dep_airport == dep][network.arr_airport == arr][network.airline == this_airline].arr_country.iloc[0] + '!'
+ 			age_update =  raw_input('How long will you be staying for? (months)..')
+ 			print '-----------------------------------------------------------------'
+ 			print '... waiting ' + str(age_update) + ' months...'
 
  			current_player._age += np.round(float(age_update)/12.0,3)
  			current_player._miles += np.round(distance,3)

@@ -69,8 +69,11 @@ def start_game():
  	print 'You have just been born in ' + country +'. Time for your first flight!'
  	print 'Select the airport your parents have chosen to depart from the'
  	print 'list of airports below.'
+ 	print '-----------------------------------------------------------------'
+
 
 	nice_print(network[network.dep_country == country][['dep_airport']].dep_airport.unique().tolist())
+	print '-----------------------------------------------------------------'
  	dep = raw_input('Departing airport...')
 
  	while len(network[network.dep_airport == dep]) == 0:
@@ -78,8 +81,12 @@ def start_game():
  		dep = raw_input('Departing airport...')
 
  	print 'Welcome to ' + dep + ' airport!'
+ 	print 'We have flights departing to the following locations:'
+ 	print '-----------------------------------------------------------------'
 
  	nice_print(network[network.dep_airport == dep].arr_airport.unique().tolist())
+
+ 	print '-----------------------------------------------------------------'
 
  	arr = raw_input('Where are you travelling to today?...')
 
@@ -102,7 +109,11 @@ def start_game():
  	current_player._frequent[this_airline] = distance
 
  	print 'You have arrived!'
- 	age_update =  raw_input('How long until your next flight? (months)..')
+ 	print 'Welcome to ' + network[network.dep_airport == dep][network.arr_airport == arr][network.airline == this_airline].arr_country.iloc[0] + '!'
+ 	age_update =  raw_input('How long will you be staying for? (months)..')
+	print '-----------------------------------------------------------------'
+ 	print '... waiting ' + str(age_update) + ' months...'
+
 
 	current_player._age += np.round(float(age_update)/12.0,3)
 	current_player._miles += np.round(distance,3)
