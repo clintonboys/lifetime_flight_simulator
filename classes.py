@@ -17,16 +17,18 @@
 
 import pandas as pd
 import numpy as np
+import random
 
 class Player(object):
 
-	def __init__(self, name, country, age, miles, flights, money):
+	def __init__(self, name, country, age, miles, flights, money, is_dead = False):
 		self._name = name
 		self._country = country
 		self._age = age
 		self._miles = miles
 		self._flights = flights
 		self._money = money
+		self._is_dead = is_dead
 
 	def print_player_stats(self):
 
@@ -52,6 +54,10 @@ class Flight(object):
 def load_airports():
 
 	return pd.read_csv('airports.csv')
+
+def load_actuarial_table():
+
+	return pd.read_csv('actuarial_table.csv')
 
 def compute_distance(lat1,long1,lat2,long2):
 	r = 6371000
@@ -93,6 +99,8 @@ def main():
  	print 'long-haul flights. '
  	print '....Loading airport data....'
  	airports = load_airports()
+ 	print '....Loading actuarial table....'
+ 	act = load_actuarial_table()
  	#print airports.head()
  	print 'Let \'s get started!'
  	current_player.print_player_stats()
@@ -112,6 +120,34 @@ def main():
 	current_player._money -= distance*(12000/2000)
 
 	current_player.print_player_stats()
+
+
+	while not current_player._is_dead:
+		death_chance = np.random.randint(0,100000)
+		if death_chance < int((act.prob_1[current_player._age] + act.prob_2[current_player._age])/2):
+			print 'Sorry, you died of natural causes at the ripe old age of ' + str(current_player._age) + '.'
+			current_player._is_dead = True
+			break
+
+		dep = raw_input('Row no of departing airport...')
+		arr = raw_input('Row no of arriving airport...')
+
+ 		distance = compute_distance(airports.lat[int(dep)], airports.long[int(dep)], airports.lat[int(arr)], airports.long[int(arr)])
+
+ 		plane_death_chance = np.random.randint(0,1000000000000)
+ 		if plane_death_chance < 5:
+ 			print 'How unlucky. You died in a plane crash.'
+ 			current_player._is_dead = True
+ 			break
+ 		else:
+ 			age_update = raw_input('How long until your next flight? (months)..')
+
+ 			current_player._age += float(age_update)/12.0
+ 			current_player._miles += distance
+ 			current_player._flights += 1
+ 			current_player._money -= distance*(12000/2000)
+
+ 			current_player.print_player_stats()
 
 
 if __name__ == '__main__':
