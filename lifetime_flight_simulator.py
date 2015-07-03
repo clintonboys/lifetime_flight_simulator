@@ -1,20 +1,3 @@
-''' 
-        _____ _______ _______ _______ _____ _______ _______          
- |        |   |______ |______    |      |   |  |  | |______          
- |_____ __|__ |       |______    |    __|__ |  |  | |______          
-                                                                     
- _______        _____  ______ _     _ _______                        
- |______ |        |   |  ____ |_____|    |                           
- |       |_____ __|__ |_____| |     |    |                           
-                                                                     
- _______ _____ _______ _     _        _______ _______  _____   ______
- |______   |   |  |  | |     | |      |_____|    |    |     | |_____/
- ______| __|__ |  |  | |_____| |_____ |     |    |    |_____| |    \_
-                                                                     
-----------------------------------------------------------------------
-
-'''
-
 import pandas as pd
 import numpy as np
 import random
@@ -65,10 +48,20 @@ def main():
 
 	 	distance = network[network.dep_airport == dep][network.arr_airport == arr][network.airline == this_airline].distance.iloc[0]
 
+	 	try:
+	 		current_player._frequent[this_airline] += distance
+	 	except KeyError:
+	 		current_player._frequent[this_airline] = distance
+
  		plane_death_chance = np.random.randint(0,1000000000000)
  		if plane_death_chance < int(5*distance):
  			print 'How unlucky. You died in a plane crash.'
  			current_player._is_dead = True
+ 			print current_player
+ 			print 'You can rest in peace for eternity having accrued the '
+ 			print 'following impressive collection of frequent flyer miles:'
+ 			for key in current_player._frequent:
+ 				print key, frequent[key]
  			break
  		else:
  			age_update = raw_input('How long until your next flight? (months)..')

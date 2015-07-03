@@ -98,6 +98,9 @@ def start_game():
  			this_airline = raw_input('Who would you prefer to fly with?..')
 
  	distance = network[network.dep_airport == dep][network.arr_airport == arr][network.airline == this_airline].distance.iloc[0]
+
+ 	current_player._frequent[this_airline] = distance
+
  	print 'You have arrived!'
  	age_update =  raw_input('How long until your next flight? (months)..')
 
