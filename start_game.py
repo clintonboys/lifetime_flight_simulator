@@ -55,21 +55,28 @@ def start_game():
  	print 'This game simulates the exciting, low-risk world of air travel!'
  	print '....Loading airport data....'
  	network = load_network()
- 	print '....Loading actuarial table....'
- 	act = load_actuarial_table()
- 	print '-----------------------------------------------------------------'
- 	print 'Let \'s get started!'
-
- 	print current_player
-
-	network.columns = ['dep_airport', 'dep_city', 'dep_country', 'long_dep', 'lat_dep',
+ 	network.columns = ['dep_airport', 'dep_city', 'dep_country', 'long_dep', 'lat_dep',
 			 		     'arr_airport', 'arr_city', 'arr_country', 'long_arr', 'lat_arr',
 			 		     'airline', 'airline_country', 'airline_active', 'distance', 'is_domestic']
-
+ 	print '....Loading actuarial table....'
+ 	act = load_actuarial_table()
+ 	print 'There are two data sources built into this game:'
+ 	print '1. Flight fatality risks'
+ 	print '2. Actuarial death tables'
+ 	print 'The purpose of the game is to simulate an entire lifetime\'s worth'
+ 	print 'of flight: you will almost certainly die of natural causes before '
+ 	print 'a plane crash kills you.'
+ 	print '-----------------------------------------------------------------'
+ 	raw_input("Press ENTER to continue...")
+ 	print '-----------------------------------------------------------------'
+ 	print 'Let \'s get started!'
+ 	print 'This is you:'
+ 	print current_player
  	print 'You have just been born in ' + country +'. Time for your first flight!'
+ 	print '-----------------------------------------------------------------'
+ 	raw_input("Press ENTER to continue...")
  	print 'Select the airport your parents have chosen to depart from the'
  	print 'list of airports below.'
- 	print '-----------------------------------------------------------------'
 
 
 	nice_print(network[network.dep_country == country][['dep_airport']].dep_airport.unique().tolist())
